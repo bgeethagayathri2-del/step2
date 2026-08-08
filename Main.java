@@ -1,14 +1,18 @@
-public class Main {
+import java.util.*;
 
-    static void checkPinLength(String pin) {
-        if (pin.length() != 4) {
-            System.out.println("Invalid PIN — must be exactly 4 digits.");
-        } else {
-            System.out.println("PIN length OK.");
-        }
-    }
-
+class Main {
     public static void main(String[] args) {
-        checkPinLength("4820");
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter sentence: ");
+        String sentence = sc.nextLine();
+
+        String[] words = sentence.split(" ");
+
+        for (String word : words) {
+            StringBuilder sb = new StringBuilder(word);
+            System.out.print(sb.reverse() + " ");
+        }
     }
 }
