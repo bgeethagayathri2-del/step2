@@ -2,38 +2,58 @@ import java.util.Scanner;
 
 public class Main {
 
-    static void parseInventoryRecord(String csvLine) {
+    static String normalizeCode(String raw) {
 
-        // Remove quotes if present
-        csvLine = csvLine.replace("\"", "");
+        raw = raw.trim();
 
-        // Split using comma
-        String[] parts = csvLine.split(",");
+        String publisher = raw.substring(0, 3).toUpperCase();
 
-        // Check if exactly 3 fields are present
-        if (parts.length != 3) {
-            System.out.println("Invalid Record");
-            return;
+        String rest = raw.substring(3);
+
+        return publisher + rest;
+    }
+
+    static String validateAndFormat(String code) {
+
+        if (code.length() != 13) {
+            return "Invalid: wrong length";
         }
 
-        String productName = parts[0];
-        String sku = parts[1];
-        String quantity = parts[2];
+        for (int i = 0; i < 3; i++) {
 
-        System.out.println("Product: " + productName +
-                           " | SKU: " + sku +
-                           " | Qty: " + quantity);
+            if (!Character.isLetter(code.charAt(i))) {
+                return "Invalid: publisher code must be 3 letters";
+            }
+        }
+
+        for (int i = 3; i < 13; i++) {
+
+            if (!Character.isDigit(code.charAt(i))) {
+                return "Invalid: remaining 10 characters must be digits";
+            }
+        }
+
+        String publisher = code.substring(0, 3);
+        String year = code.substring(3, 7);
+        String catalog = code.substring(7, 13);
+
+        return "[" + publisher + "] YEAR: " + year
+                + " | CATALOG: " + catalog;
     }
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        try (Scanner sc = new Scanner(System.in)) {
 
-        System.out.print("Enter inventory record: ");
-        String input = sc.nextLine();
+            System.out.print("Enter ISBN code: ");
 
-        parseInventoryRecord(input);
+            String input = sc.nextLine();
 
-        sc.close();
+            String code = normalizeCode(input);
+
+            String result = validateAndFormat(code);
+
+            System.out.println(result);
+        }
     }
 }
